@@ -1,0 +1,1 @@
+export { submitPersonalInfo } from './actions';

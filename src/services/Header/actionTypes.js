@@ -1,0 +1,1 @@
+export const SUBMIT_HEADER = "SUBMIT_HEADER";
