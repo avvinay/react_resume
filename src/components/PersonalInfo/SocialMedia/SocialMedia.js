@@ -21,7 +21,7 @@ const SocialMedia = (props) => {
         case 'facebook':
             icon = <FacebookIcon />
             break;
-        case 'linkedin': 
+        case 'twitter': 
             icon = <TwitterIcon />
             break;            
     }

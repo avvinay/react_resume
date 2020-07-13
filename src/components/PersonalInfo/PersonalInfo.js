@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
@@ -41,11 +41,13 @@ const PersonalInfo = (props) => {
       dialog = <PersonalInfoDialog open={dialogOpen} />
   }
 
-  let socialMedia = props.social_media.length > 0 ? props.social_media.forEach((s_media) => {
-    return (
-      <SocialMedia type={s_media.type} url={s_media.url} />
-    )
-  }) : console.log("its empty");
+  let social = null;
+  if(props.social_media.length) {
+    social = props.social_media.map((s_media,index) => {
+      return <SocialMedia key={index} type={s_media.type} url={s_media.url} />
+    });
+  }
+  
 
   function FormRow() {
     return (
@@ -81,7 +83,7 @@ const PersonalInfo = (props) => {
             </Grid>
         </Grid>
         {/* looping through  social media */}
-        {socialMedia}
+        {social}
       </React.Fragment>
     );
   }

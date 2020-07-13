@@ -1,15 +1,13 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import Chip from '@material-ui/core/Chip';
-import Avatar from '@material-ui/core/Avatar';
-import SignalWifi1BarIcon from '@material-ui/icons/SignalWifi1Bar';
-import SignalWifi2BarIcon from '@material-ui/icons/SignalWifi2Bar';
-import SignalWifi3BarIcon from '@material-ui/icons/SignalWifi3Bar';
-import SignalWifi4BarIcon from '@material-ui/icons/SignalWifi4Bar';
-import DoneIcon from '@material-ui/icons/Done';
+import Skill from './Skill';
+import SkillsDialog from './SkillsDialog';
+import {connect} from 'react-redux';
+
+
 
 const useStyles = makeStyles((theme) => ({
    root: {
@@ -21,99 +19,56 @@ const useStyles = makeStyles((theme) => ({
     border: 0,
     borderRadius: 0,
     margin: 'auto',
-  },
-  chip: {
-      padding: 10,
-      margin: 2,
-  }
-  
+    cursor: 'pointer'
+  },  
+
 }));
 
-export default function Header() {
+
+
+
+
+const Skills = (props) => {
   const classes = useStyles();
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const handleDelete = () => {
-    console.info('You clicked the delete icon.');
-  };
+  let dialog = null;
+  if(dialogOpen) {
+      dialog = <SkillsDialog open={dialogOpen} />
+  }  
 
-  const handleClick = () => {
-    console.info('You clicked the Chip.');
-  };
+  let skills = null;
+  if(props.skills.length) {
+    skills = props.skills.map((skill,index) => {
+      return <Skill key={index} name={skill.name.charAt(0).toUpperCase() + skill.name.slice(1)} level={skill.level} />;
+    })
+  }
+
 
   return (
     <div className={classes.root}>
-      <Paper className={classes.paper}>
+      <Paper className={classes.paper} onClick={() => setDialogOpen(!dialogOpen)}>
         <Grid container>
             <Grid item>
                 <Typography variant='h6' gutterBottom>SKILLS</Typography>
             </Grid>
         </Grid>
         <Grid container>
-            <Grid item>
-                <Chip 
-                    className={classes.chip}  
-                    color="primary" 
-                    label="Javascript" 
-                    onClick={handleClick}
-                    onDelete={handleDelete}
-                    deleteIcon={<SignalWifi1BarIcon />}/>
-            </Grid>
-            <Grid item>
-                <Chip 
-                    className={classes.chip}  
-                    color="primary" 
-                    label="Javascript" 
-                    onClick={handleClick}
-                    onDelete={handleDelete}
-                    deleteIcon={<SignalWifi2BarIcon />}/>
-            </Grid>
-            <Grid item>
-                <Chip 
-                    className={classes.chip}  
-                    color="primary" 
-                    label="Javascript" 
-                    onClick={handleClick}
-                    onDelete={handleDelete}
-                    deleteIcon={<SignalWifi3BarIcon />}/>
-            </Grid>
-            <Grid item>
-                <Chip 
-                    className={classes.chip}  
-                    color="primary" 
-                    label="Javascript" 
-                    onClick={handleClick}
-                    onDelete={handleDelete}
-                    deleteIcon={<SignalWifi4BarIcon />}/>
-            </Grid>
-
-            <Grid item>
-                {/* <Chip className={classes.chip} color="primary" label="Reactjs" /> */}
-               
-            </Grid>
-            <Grid item>
-                <Chip className={classes.chip} color="primary" label="Nodejs" />
-            </Grid>
-            <Grid item>
-                <Chip className={classes.chip} color="primary" label="Mongodb" />
-            </Grid>
-            <Grid item>
-                <Chip className={classes.chip} color="primary" label="AWS" />
-            </Grid>
-            <Grid item>
-                <Chip className={classes.chip} color="primary" label="CSS" />
-            </Grid>
-            <Grid item>
-                <Chip className={classes.chip} color="primary" label="Laravel" />
-            </Grid>
-            <Grid item>
-                <Chip className={classes.chip} color="primary" label="Php" />
-            </Grid>
-            <Grid item>
-                <Chip className={classes.chip} color="primary" label="MySql" />
-            </Grid>
+          {skills}
         </Grid>
       </Paper>
-      
+      {dialog}
     </div>
   );
 }
+
+
+const mapStateToProps = (state) => {
+  return {
+    skills: state.skillsState.skills
+  }
+}
+
+
+
+export default connect(mapStateToProps, null)(Skills);

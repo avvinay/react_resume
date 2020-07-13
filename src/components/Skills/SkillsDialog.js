@@ -12,20 +12,17 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 import { connect } from 'react-redux';
-import * as actionCreators from '../../services/PersonalInfo/index';
+import * as actionCreators from '../../services/Skills/index';
 
-const PersonalInfoDialog = (props) => {
+const SkillsDialog = (props) => {
   const [open, setOpen] = useState(props.open);
-  const [email, setEmail] = useState('');
-  const [mobileNumber, setMobileNumber] = useState('');
-  const [location, setLocation] = useState('');
-  const [socialMedia, setSocialMedia] = useState([]);
-  const [media, setMedia] = useState('');
-  const [url, setUrl] = useState('');
-  const [totalMedia,setTotalMedia] = useState(['linkedin','github','facebook','twitter']);
+  const [skill, setSkill] = useState('');
+  const [skillLevel, setSkillLevel] = useState('');
+  const [skillLevels,setSkillLevels] = useState(['beginner','medium','expert','pro','none']);
+  const [totalSkills, setTotalSkills] = useState([]);
 
   const handleChange = (event) => {
-    setMedia(event.target.value);
+    setSkillLevel(event.target.value);
   };
 
   const handleClickOpen = () => {
@@ -37,43 +34,37 @@ const PersonalInfoDialog = (props) => {
   };
 
   const handleSubmit = () => {
-     let personalInfoObj = {
-       email,
-       mobile_number: mobileNumber,
-       location,
-       social_media: socialMedia
-     };
 
-     props.onSubmitPersonalInfo(personalInfoObj);
-     setOpen(false);
+    props.onSubmitSkills(totalSkills);
+    
   }
 
   const handleAdd = () => {
-
-    if(media !== "" & url !== "") {
-      let socialObject = {
-        type: media,
-        url
-      };
-      setSocialMedia([...socialMedia, socialObject]);
-      // newTotalMedia = [...totalMedia.slice(0, removeIndex),...totalMedia.slice(removeIndex+1, totalMedia.length)];
-      const newTotalMedia = totalMedia.filter(m => m !== media);
-      setTotalMedia(newTotalMedia);
-      setUrl('');
+    let skillObj = {
+      name: skill.toLowerCase(),
+      level: skillLevel
+    };
+    // add to array if skill not found
+    const foundSkill = totalSkills.some(skl => skl.name === skill.toLowerCase());
+    if(!foundSkill) {
+      const newTotalSkills = [...totalSkills, skillObj];
+      setTotalSkills(newTotalSkills);
     }
+
+    setSkill('');
+    setSkillLevel('');
+
   };
 
 
-  let menuItems = totalMedia.map((menuItem,index) => {
+  let menuItems = skillLevels.map((menuItem,index) => {
     return (
       <MenuItem value={menuItem} key={index}>{menuItem.charAt(0).toUpperCase() + menuItem.slice(1)}</MenuItem>
     )
   });
 
-  let socialTableRows = socialMedia.map((row, index) => {
-    return (
-        <p key={index}>{row.type}-{row.url}</p>
-    )
+  let skillRows = totalSkills.map((tskl,index) => {
+      return <p key={index}>{tskl.name} - {tskl.level}</p>
   });
 
   
@@ -87,32 +78,23 @@ const PersonalInfoDialog = (props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">{"Enter Personal Info Details"}</DialogTitle>
+        <DialogTitle id="alert-dialog-title">{"Enter Skill With Level or Not"}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
           </DialogContentText>
           <Grid container spacing={3}>
             <Grid item xs={4} md={4}>
-                <TextField key={1} id="outlined-basic" label="Email Address" variant="outlined" onChange={(e) => setEmail(e.target.value)}   />
-            </Grid>
-            <Grid item xs={4} md={4}>
-                <TextField key={2} id="outlined-basic" label="Mobile Number" variant="outlined" onChange={(e) => setMobileNumber(e.target.value)}  />
-            </Grid>
-            <Grid item xs={4} md={4}>
-                <TextField key={3} id="outlined-basic" label="Location" variant="outlined" onChange={(e) => setLocation(e.target.value)} />
-            </Grid>
-            
-          </Grid>
-          <Grid container spacing={3}>
+                <TextField key={1} id="outlined-basic" label="Skill" variant="outlined" onChange={(e) => setSkill(e.target.value)}   />
+            </Grid>    
             <Grid item xs={4} md={4}>
               <FormControl variant="outlined" style={{"minWidth":160}}>
-                  <InputLabel id="demo-simple-select-outlined-label">Social Media Links</InputLabel>
+                  <InputLabel id="demo-simple-select-outlined-label">Skill Level</InputLabel>
                   <Select
                   labelId="demo-simple-select-outlined-label"
                   id="demo-simple-select-outlined"
-                  value={media}
+                  value={skillLevel}
                   onChange={handleChange}
-                  label="Social Media"
+                  label="Skill Level"
                   >
                       <MenuItem value="">
                           <em>None</em>
@@ -122,19 +104,16 @@ const PersonalInfoDialog = (props) => {
               </FormControl>
             </Grid>
             <Grid item xs={4} md={4}>
-                <TextField  id="outlined-basic" label="Url" variant="outlined" onChange={(e) => setUrl(e.target.value)} value={url} />
-            </Grid>
-            <Grid item xs={4} md={4}>
                 <Button style={{"marginTop": 10}} variant="outlined" color="secondary" onClick={handleAdd} >ADD</Button>
-            </Grid>
+            </Grid>        
           </Grid>
+
           <Grid container>
             <div>
-              {socialTableRows}
+              {/* rows goes here */}
+              {skillRows}
             </div>
           </Grid>
-          
-          
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="secondary">
@@ -151,11 +130,12 @@ const PersonalInfoDialog = (props) => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSubmitPersonalInfo: async(personalInfo) => {
-      await dispatch(actionCreators.submitPersonalInfo(personalInfo));
+    onSubmitSkills: async(skills) => {
+      await dispatch(actionCreators.submitSkills(skills));
     }
   }
 }
 
 
-export default connect(null, mapDispatchToProps)(PersonalInfoDialog);
+
+export default connect(null, mapDispatchToProps)(SkillsDialog);

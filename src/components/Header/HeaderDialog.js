@@ -13,9 +13,9 @@ import * as actionCreators from '../../services/Header/index';
 const HeaderDialog = (props) => {
   const [open, setOpen] = React.useState(props.open);
 
-  const [name, setName] = useState('');
-  const [profession, setProfession] = useState('');
-  const [brief, setBrief] = useState('');
+  const [name, setName] = useState(props.name);
+  const [profession, setProfession] = useState(props.profession);
+  const [brief, setBrief] = useState(props.brief);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -51,15 +51,15 @@ const HeaderDialog = (props) => {
           </DialogContentText>
           <Grid container spacing={3}>
             <Grid item xs={6} md={6}>
-                <TextField key={1} id="outlined-basic" label="Enter Name" variant="outlined"  onChange={(e) => setName(e.target.value)}  />
+                <TextField key={1} id="outlined-basic" label="Enter Name" variant="outlined"  onChange={(e) => setName(e.target.value)} value={name}  />
             </Grid>
             <Grid item xs={6} md={6}>
-                <TextField key={2} id="outlined-basic" label="Enter Profession" variant="outlined" onChange={(e) => setProfession(e.target.value)} />
+                <TextField key={2} id="outlined-basic" label="Enter Profession" variant="outlined" onChange={(e) => setProfession(e.target.value)} value={profession} />
             </Grid>
           </Grid>
           <Grid container spacing={3}>
             <Grid item xs={12} md={12}>
-                <TextField key={3} id="outlined-basic" label="Enter Brief" variant="outlined" onChange={(e) => setBrief(e.target.value)} fullWidth />
+                <TextField key={3} id="outlined-basic" label="Enter Brief" variant="outlined" onChange={(e) => setBrief(e.target.value)} fullWidth value={brief} />
             </Grid>
           </Grid>
           
